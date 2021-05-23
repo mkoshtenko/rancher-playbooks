@@ -1,6 +1,18 @@
 ---
-- hosts: all
+- hosts: rancher
   become: yes
 
   tasks:
-  - name
+    - name: Install NTP daemon to keep the time in sync.
+      package:
+        name: chrony
+        state: present
+
+    - name: Enable and start NTP daemon.
+      service:
+        name: chronyd
+        state: started
+        enabled: yes
+
+    - name: Make sure the hosts are synced with the NTP server.
+      command: chronyd -q

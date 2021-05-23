@@ -16,6 +16,11 @@ Rancher is open source software that combines everything an organization needs t
 [Getting Started](https://rancher.com/docs/rancher/v2.5/en/)
 
 ## Objectives
+done:
+- Install and run NTP daemon to keep the time in sync.
+
+todo:
+- package -a "name=chrony state=present"
 - disable swap
 - configure ports
 - configure hostname
@@ -24,6 +29,7 @@ Rancher is open source software that combines everything an organization needs t
 
 ## Usage
 All the commands below should be executed on the control node only.
+They assume that ansible_user can run sudo without a password.
 
 Add node to ansible hosts file (default: /etc/ansible/hosts)
 ```
@@ -45,22 +51,15 @@ Hostnames are correct:
 ```
 ansible rancher -a "hostname"
 ```
+
 The nodes have enough free resources to run applications:
 ```
 ansible rancher -a "df -h"
 ```
 
-The nodes have the right time and date:
+Run the playbook:
 ```
-ansible rancher -a "date"
-```
-Install NTP daemon on the nodes to keep the time in sync.
-Note: this assumes ansible_user can run sudo without a password.
-TODO: move to the playbook
-```
-ansible rancher -b -m apt -a "name=chrony state=present"
-ansible rancher -b -m service -a "name=chronyd state=started enabled=yes"
-ansible rancher -b -a "chronyd -q"
+ansible-playbook playbook.yml
 ```
 
 
