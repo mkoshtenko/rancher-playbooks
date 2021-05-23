@@ -23,6 +23,8 @@ Rancher is open source software that combines everything an organization needs t
 - install packets
 
 ## Usage
+All the commands below should be executed on the control node only.
+
 Add node to ansible hosts file (default: /etc/ansible/hosts)
 ```
 # Rancher nodes
@@ -38,9 +40,27 @@ etcd
 ansible_user=root
 ```
 
-Check the connection by running:
+Let's make sure the nodes are configured properly.
+Hostnames are correct:
 ```
 ansible rancher -a "hostname"
+```
+The nodes have enough free resources to run applications:
+```
+ansible rancher -a "df -h"
+```
+
+The nodes have the right time and date:
+```
+ansible rancher -a "date"
+```
+Install NTP daemon on the nodes to keep the time in sync.
+Note: this assumes ansible_user can run sudo without a password.
+TODO: move to the playbook
+```
+ansible rancher -b -m apt -a "name=chrony state=present"
+ansible rancher -b -m service -a "name=chronyd state=started enabled=yes"
+ansible rancher -b -a "chronyd -q"
 ```
 
 
