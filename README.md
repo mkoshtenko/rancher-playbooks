@@ -20,7 +20,6 @@ done:
 - Install and run NTP daemon to keep the time in sync.
 
 todo:
-- package -a "name=chrony state=present"
 - disable swap
 - configure ports
 - configure hostname
@@ -46,7 +45,8 @@ etcd
 ansible_user=root
 ```
 
-Let's make sure the nodes are configured properly.
+#### Make sure the nodes are configured properly.
+
 Hostnames are correct:
 ```
 ansible rancher -a "hostname"
@@ -57,10 +57,21 @@ The nodes have enough free resources to run applications:
 ansible rancher -a "df -h"
 ```
 
-Run the playbook:
+#### Run the playbook:
 ```
 ansible-playbook playbook.yml
 ```
 
-
+Deactivate the swap space:
+```
+ansible rancher -b -a "swapoff -v /swap.img"
+```
+Remove the swap file entry
+```
+ansible rancher -b -m lineinfile -a "path=/etc/fstab state=absent regexp='^/swap.img'"
+```
+Remove the actual swap file
+```
+ansible rancher -b -m file -a "dest=/swap.img state=absent"
+```
 
