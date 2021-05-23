@@ -16,3 +16,24 @@
 
     - name: Make sure the hosts are synced with the NTP server.
       command: chronyd -q
+
+    - name: Check that the swap file exists.
+      stat:
+        path: /swap.img
+      register: swap_stat_result
+
+    - name: Deactivate the swap space.
+      command: swapoff -v /swap.img
+      when: swap_stat_result.stat.exists
+    
+    - name: Remove the swap file entry.
+      lineinfile:
+        path: /etc/fstab
+        state: absent
+        regexp: '^/swap.img'
+
+    - name: Remove the actual swap file.
+      file:
+        dest: /swap.img
+        state: absent
+

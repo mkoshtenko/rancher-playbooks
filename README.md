@@ -62,16 +62,3 @@ ansible rancher -a "df -h"
 ansible-playbook playbook.yml
 ```
 
-Deactivate the swap space:
-```
-ansible rancher -b -a "swapoff -v /swap.img"
-```
-Remove the swap file entry
-```
-ansible rancher -b -m lineinfile -a "path=/etc/fstab state=absent regexp='^/swap.img'"
-```
-Remove the actual swap file
-```
-ansible rancher -b -m file -a "dest=/swap.img state=absent"
-```
-
