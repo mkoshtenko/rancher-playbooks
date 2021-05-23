@@ -19,9 +19,10 @@ Rancher is open source software that combines everything an organization needs t
 done:
 - Install and run NTP daemon to keep the time in sync.
 - Disable the swap file.
+- Accept inbound Kubernetes API traffic
 
 todo:
-- configure ports
+- configure [more ports](https://rancher.com/docs/rancher/v2.x/en/installation/requirements/ports/)
 - configure hostname
 - install modules
 - install packets
@@ -61,4 +62,5 @@ ansible rancher -a "df -h"
 ```
 ansible-playbook playbook.yml
 ```
+
 

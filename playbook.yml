@@ -36,4 +36,15 @@
       file:
         dest: /swap.img
         state: absent
+    
+    - name: Open TCP port for traffic to Kubernetes API.
+      iptables:
+        action: append
+        chain: INPUT
+        jump: ACCEPT
+        protocol: tcp
+        destination_port: '6443'
+        comment: Kubernetes API clients
+
+
 
