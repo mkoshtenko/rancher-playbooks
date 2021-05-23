@@ -18,9 +18,9 @@ Rancher is open source software that combines everything an organization needs t
 ## Objectives
 done:
 - Install and run NTP daemon to keep the time in sync.
+- Disable the swap file.
 
 todo:
-- disable swap
 - configure ports
 - configure hostname
 - install modules
