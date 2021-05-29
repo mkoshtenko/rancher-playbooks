@@ -1,5 +1,6 @@
 ---
-- hosts: rancher
+- name: Synchronize time with NTP
+  hosts: rancher
   become: yes
 
   tasks:
@@ -17,6 +18,11 @@
     - name: Make sure the hosts are synced with the NTP server.
       command: chronyd -q
 
+- name: Disable swap.
+  hosts: rancher
+  become: yes
+
+  tasks:
     - name: Check that the swap file exists.
       stat:
         path: /swap.img
@@ -37,6 +43,11 @@
         dest: /swap.img
         state: absent
     
+- name: Setup firewall.
+  hosts: rancher
+  become: yes
+
+  tasks:
     - name: Open TCP port for traffic to Kubernetes API.
       iptables:
         action: append
