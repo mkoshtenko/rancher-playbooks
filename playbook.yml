@@ -73,6 +73,7 @@
 - name: Load required kernel modules.
   hosts: rancher
   become: yes
+  tags: kernel
   vars:
     kernel_modules:
       - br_netfilter
@@ -108,10 +109,29 @@
       - xt_tcpudp
 
   tasks:
-    - name: Load kernel modules for RKE
-      modprobe:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ kernel_modules }}"
+    - name: Filter available kernel modules.
+      shell: |
+        if [ -z `find /lib/modules/$(uname -r) -type f -name "{{ item | quote }}"* | tr '     +++' '\n'` ]; then
+          exit 1
+        else
+          echo "{{ item | quote }}"
+          exit 0
+        fi;
+      ignore_errors: True
+      changed_when: False
+      loop: "{{ kernel_modules }}"
+      register: filter_modules
+
+    - name: Print result.
+      debug:
+        msg: "Item: {{ item.stdout }}"
+      when: item.rc == 0
+      loop: "{{ filter_modules.results }}"
+
+#    - name: Load kernel modules for RKE
+#      modprobe:
+#        name: "{{ item }}"
+#        state: present
+#      with_items: "{{ kernel_modules }}"
 
 
